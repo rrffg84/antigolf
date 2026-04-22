@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import * as WebBrowser from 'expo-web-browser';
 import { loadLinks, saveLinks } from '../storage';
 
 export default function HomeScreen({ navigation }) {
@@ -20,6 +21,13 @@ export default function HomeScreen({ navigation }) {
       loadLinks().then(setLinks);
     }, [])
   );
+
+  async function openLink(url) {
+    await WebBrowser.openBrowserAsync(url, {
+      toolbarColor: '#1C1C1E',
+      controlsColor: '#ffffff',
+    });
+  }
 
   function deleteLink(id) {
     Alert.alert('Удалить ссылку?', '', [
@@ -41,7 +49,7 @@ export default function HomeScreen({ navigation }) {
     return (
       <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate('Browser', { url: item.url, title: item.title })}
+        onPress={() => openLink(item.url)}
         onLongPress={() => deleteLink(item.id)}
         activeOpacity={0.8}
       >
@@ -67,7 +75,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Мои ссылки</Text>
+        <Text style={styles.headerTitle}>Antigolf</Text>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate('AddLink')}
